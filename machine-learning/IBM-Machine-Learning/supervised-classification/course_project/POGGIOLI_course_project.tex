@@ -1,0 +1,176 @@
+\documentclass[12pt]{article}
+\usepackage{fullpage}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{units}
+\usepackage{adjustbox}
+\usepackage{pdfpages}
+\usepackage{hyperref}
+
+\begin{document}
+
+\title{Supervised Classification: Predicting Hiring Decisions}
+\author{Anthony R. Poggioli}
+\maketitle
+
+\section{Project Description}
+
+This project was completed as part of the IBM course \href{https://www.coursera.org/learn/supervised-machine-learning-classification}{"Supervised Machine Learning: Classification"} which is itself part of the \href{https://www.coursera.org/professional-certificates/ibm-machine-learning}{IBM Machine Learning Professional Certificate on Coursera}. In this project, I compare the efficacy of several different binary classification machine learning algorithms in predicting if an interviewed candidate is subsequently hired based on 10 independent features described below.
+
+Note that the analysis and data visualization was performed in Python, and the associated Jupyter notebook is attached at the end of this document.
+
+\section{Project Goals}
+
+\subsection{Business Goals}
+
+The business goal of this project is to determine the factors that are most important in determining if a candidate is hired or not. Specifically, we would like to develop an interpretable ML classifier that will be able to both predict if a candidate is hired based on certain features and explain the most relevant features in determining if a person is hired. Note that these need not be the same model. It may be that the best predictive model is not highly interpretable, in which case an interpretable surrogate model with necessarily inferior predictive performance will also be developed.
+
+In a business context, such a project may be useful for a variety of reasons, including
+\begin{itemize}
+\item determining what factors contribute to a successful hiring outcome so that the hiring procedure can be appropriately refocused and made more efficient, and
+\item ensuring that the factors leading to candidate success are aligned with the company's values and strategies.
+\end{itemize}
+
+\subsection{Learning Goals}
+
+My goals in completing this project are to deomonstrate
+\begin{enumerate}
+\item proficiency with an array of binary classification algorithms implimented in scikit-learn,
+\item understanding of cross-validation for hyperparameter tuning,
+\item understanding of error metrics appropriate for classification and generalization error estimation, and
+\item proficiency with basic Python libraries like NumPy, Pandas, Matplotlib, and seaborn.
+\end{enumerate}
+
+\section{Data}
+
+The data used here is taken from the Kaggle dataset \href{https://www.kaggle.com/datasets/rabieelkharoua/predicting-hiring-decisions-in-recruitment-data/data}{Predicting Hiring Decisions in Recruitment Data}. I selected this dataset because it represents a relatively simple binary classification problem with a low-dimensional feature space.
+
+Though it is not explicitly specified, this data is likely synthetic. It is also very clean (as I will show below). I therefore will not be able to demonstrate my data cleaning abilities in this project, but these skills are evidenced by other work available on my \href{https://github.com/arpogg24}{GitHub} -- see especially the \href{https://www.coursera.org/professional-certificates/google-data-analytics}{Google Data Analytics Professional Certificate} capstone, \href{https://github.com/arpogg24/arpogg24.github.io/blob/main/analytics/Google_Data_Analytics-Cyclistic_Case_Study/cyclistic_case_study.pdf}{Cyclistic Case Study}.
+
+\subsection{Features}
+
+The following features are included in the data:
+\begin{enumerate}
+\item {\bf Age} (integer) - Age of the candidate in years.
+\item {\bf Gender} (integer) - Gender of the candidate, with {\it 0 = Male} and {\it 1 = Female}.
+\item {\bf EducationLevel} (integer) - Highest education level attained by the candidate, with {\it 1 = Bachelor's Type 1}, {\it 2 = Bachelor's Type 2}, {\it 3 = Master's}, and {\it 4 = Ph.D.} Note that it is not specified in the description of the data what the difference is between a Type 1 and a Type 2 bachelor's degree.
+\item {\bf ExperienceYears} (integer) - Candidate's professional experience in years.
+\item {\bf PreviousCompanies} (integer) - The number of companies the candidate has worked for previously.
+\item {\bf DistanceFromCompany} (float) - The distance in kilometers from the candidate's residence to the company.
+\item {\bf InterviewScore} (integer) - An integer score between 0 and 100 assigned to the candidate based on their interview.
+\item {\bf SkillScore} (integer) - An integer score between 0 and 100 assigned to the candidate based on their technical skills.
+\item {\bf PersonalityScore} (integer) - An integer score between 0 and 100 assigned to the candidate based on an assesment of their personality traits.
+\item {\bf RecruitmentStrategy} (integer) - The strategy adopted by the hiring team, with {\it 1 = Aggressive}, {\it 2 = Moderate}, and {\it 3 = Conservative}.
+\item {\bf HiringDecision} (integer) - The outcome of the hiring process with {\it 0 = Not Hired} and {\it 1 = Hired}. This is our target variable.
+\end{enumerate}
+
+\section{Model Considerations}
+
+This is a binary classification problem, and there are many potentially suitable algorithms. We will focus on four standard algorithms: k-nearest neighbors, (nonlinear) logistic regression, support vector classification, and a decision tree. More advanced additive/ensemble algorithms, such as the random forest algorithm, will not be considered because of the low dimension of the feature space and the relatively small number of samples (1500). High-complexity models run a high risk of overfitting in such a context.
+
+\section{Supervised Feature Selection}
+
+%\begin{figure}[H]
+%    \centerline{\includegraphics[scale = 0.35]{../figures/hist_education.pdf}}
+%    \caption{}
+%    \label{fig:education_hist}
+%\end{figure}
+%
+%\begin{figure}[H]
+%    \centerline{\includegraphics[scale = 0.35]{../figures/hist_experience.pdf}}
+%    \caption{}
+%    \label{fig:experience_hist}
+%\end{figure}
+%
+%\begin{figure}[H]
+%    \centerline{\includegraphics[scale = 0.35]{../figures/hist_interview.pdf}}
+%    \caption{}
+%    \label{fig:interview_hist}
+%\end{figure}
+%
+%\begin{figure}[H]
+%    \centerline{\includegraphics[scale = 0.35]{../figures/hist_skill.pdf}}
+%    \caption{}
+%    \label{fig:skill_hist}
+%\end{figure}
+%
+%\begin{figure}[H]
+%    \centerline{\includegraphics[scale = 0.35]{../figures/hist_personality.pdf}}
+%    \caption{}
+%    \label{fig:personality_hist}
+%\end{figure}
+%
+%\begin{figure}[H]
+%    \centerline{\includegraphics[scale = 0.35]{../figures/hist_recruitment.pdf}}
+%    \caption{}
+%    \label{fig:recruitment_hist}
+%\end{figure}
+
+For the sake of model interpretability, we look to focus on only the features most highly correlated with the target ({\bf HiringDecision}). Because we are considering the correlation with the target variable, this is a supervised procedure, and we have to be careful not to introduce significant bias into our model and our estimates of the generalization error by evaluating the correlations on the entire data set. Instead, we introduce a 2/3-1/3 train-test split and use the training data to calculate the absolute values of the Pearson correlations for each predictive feature. This is shown in Fig. \ref{fig:correlations}.
+
+\begin{figure}[H]
+    \centerline{\includegraphics[scale = 0.5]{../figures/feature_correlations.pdf}}
+    \caption{The absolute value of the Pearson correlation coefficient between each independent feature and the target feature ({\bf HiringDecision}), calculated on the training set. The orange bars indicate features that are retained for modeling; the blue bars indicate features that are not.}
+    \label{fig:correlations}
+\end{figure}
+
+It is crucial not to base supervised feature selection on the entire data set because our estimation of the generalization error then would not account for statistical variations in feature importance -- that is, we need to allow for the possiblity that the most important features in the test set are not the most important features in the training set when estimating the generalization error. A more careful procedure would perform feature selection at every step in cross-validation. It would also consider model performance with all features and with only the selected features; it is of course possible that, even if certain raw features are not highly correlated with the target, they may become predictive when conditioned on certain other predictive features -- for example, it might be that the distance of a candidate from the company location has little effect overall but becomes more significant when deciding between two otherwise highly qualified candidates. I have used the abbreviated procedure described above for the sake of time.
+
+From Fig. \ref{fig:correlations}, we see that {\bf RecruitmentStrategy} is most strongly correlated with the target. Following this, there is a steady decline in the correlation for the following five features and then a steep drop-off for {\bf PreviousCompanies} to a value below $0.1$. Based on this, we conclude that only six features -- {\bf RecruitmentStrategy}, {\bf EducationLevel}, {\bf SkillScore}, {\bf PersonalityScore}, {\bf ExperienceYears}, and {\bf InterviewScore} -- are correlated with the target. We therefore only retain these predictive features when developing our models.
+
+\section{Model Selection}
+
+As noted above, I considered four different models. The hyperparameters of each model were tuned using grid search cross-validation with five stratified folds using F1-score as the scoring criterion. The justification for using F1-score is discussed in the Jupyter notebook attached at the end of this document. The models, tuned hyperparameters, and optimal hyperparameter values, are given in the following table:
+
+\begin{center}
+\begin{tabular}{| l | p{4.5in} |}
+{\bf Model} & {\bf Tuned Hyperparameters} \\
+\hline
+logistic regression & \begin{itemize} \item degree of polynomial feature transformation ($n = 3$) \item $L_2$-norm regularization parameter ($C = 719.7$) \end{itemize} \\
+k-nearest neighbors & \begin{itemize} \item degree of $L_p$ distance metric ($p = 1$) \item number of nearest neighbors ($k = 3$) \end{itemize} \\
+support vector classifier & \begin{itemize} \item $L_2$-norm regularization parameter ($C = 1.758$) \item Gaussian RBF kernel width ($\gamma = 5.179$) \end{itemize} \\
+decision tree & \begin{itemize} \item optimal splitting criterion (entropy) \item optimal depth ($d = 6$) \item optimal number of features to consider at split ($N_{\rm feat} = 5$) \end{itemize} \\
+\label{table:models}
+\end{tabular}
+\end{center}
+
+Fig. \ref{fig:evaluation} shows the accuracy and F1-score for each model. We see that model scores and accuracies are all within a few points of each other. Within this context, the decision tree is the best model. It has an out-of-sample F1-score of $0.84$ and an out-of-sample accuracy of $0.91$. {\bf We will therefore take the decision tree model as our predictive model, and we will analyze this model in order to determine the key features determining candidate success.}
+
+\begin{figure}[H]
+    \centerline{\includegraphics[scale = 0.5]{../figures/model_evaluation.pdf}}
+    \caption{Accuracy and F1-score for the different optimized models considered here. DT indicates the optimized decision tree model, LR the (nonlinear) logistic regression, KNN the k-nearest neighbors model, and SVC the support vector classifier.}
+    \label{fig:evaluation}
+\end{figure}
+
+\section{Interpreting the Decision Tree}
+
+\begin{figure}[H]
+    \centerline{\includegraphics[scale = 0.5]{../figures/normalized_importances.pdf}}
+    \caption{Decision tree feature importances for the six predictive features considered here. The importances are normalized such that the most important feature ({\bf RecruitmentStrategy}) has unit importance.}
+    \label{fig:importance}
+\end{figure}
+
+We see that the most important feature in determining hiring outcome is {\bf RecruitmentStrategy}. Combined with the distribution plots above, we find that candidates are most likely to be successful during aggressive hiring campaigns, while candidates are least likely to be successful during moderate hiring campaigns. The increased success of candidates during aggressive hiring campaigns could reflect, for example, a tendency of the hiring team to hire a candidate quickly with less regard for their qualifications, a commitment of the committee to fill the position, or an effort on the part of the hiring committee to locate candidates who are more qualified and more likely to succeed.
+
+The next most important feature is {\bf PersonalityScore}, which is only about half as important as {\bf RecruitmentStrategy}. The relative feature importance decreases steadily to about 40\% across {\bf ExperienceYears}, {\bf InterviewScore}, and {\bf SkillScore}. It then drops more precipitously to about 25\% for {\bf EducationLevel}.
+
+\section{Future Work}
+
+It is an interesting finding that the aggressiveness of the hiring strategy is the most important factor in determining candidate success. Future work would look at determining if this is because a candidate is always eventually hired during aggressive hiring campaigns, if hiring committees are committed to filling positions quickly during aggressive campaigns and therefore are not as stringent about candidate qualifications, or if candidates are screened more effectively during the pre-interview vetting process and hence only more qualified candidates are considered during aggressive hiring campaigns. This question may be answered in part or entirely using the data available, but I will terminate the analysis here for the sake of time.
+
+A crucial next step in the current analysis would be to look at the pathway to candidate success conditioned on a particular hiring strategy in order to determine if the factors leading to a candidate being hired are statistically distinct for people considered during aggressive and moderate hiring strategies. This would also elucidate the importance of candidate qualities given a particular committee strategy. This analysis is not completed here for the sake of time.
+
+It would also be instructive to explore the graphical representation of the decision tree, shown below, to gain further insight into the features determining candidate success, but this is also left out of the present work for the sake of time.
+
+\begin{figure}[H]
+  \begin{adjustbox}{addcode={\begin{minipage}{\width}}{\caption{%
+      Plot of the decision tree structure.
+      }\end{minipage}},rotate=90,center}
+      \includegraphics[scale=0.2]{../figures/optimal_tree.pdf}%
+  \end{adjustbox}
+\end{figure}
+
+\AtEndDocument{\includepdf[pages=-]{../hiring_classification.pdf}}
+
+\end{document}

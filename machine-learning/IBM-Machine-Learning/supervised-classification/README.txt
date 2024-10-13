@@ -1,0 +1,3 @@
+This folder contains a project applying supervised learning methods -- k-nearest neighbors, support vector classification, and decision tree analysis -- to hiring data. The goal was to develop a predictive model that could determine with a high degree of accuracy whether or not candidates would be successful (i.e., hired). A secondary goal was to determine which factors are the most predictive of candidate success in order to inform and refocus recruitment approaches.
+
+The folder course_project contains a small report submitted for grading as the final project of the IBM Machine Learning Professional Certification course on supervised learning.

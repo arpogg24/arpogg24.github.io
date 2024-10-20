@@ -1,3 +1,2 @@
 # arpogg24.github.io
-A place to store case studies and other personal projects.
-This GitHub is under reconstruction...
+Here you can find my published papers and PhD theses in the "papers" folder. Project files have moved to their own dedicate repositories.

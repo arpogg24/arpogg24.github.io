@@ -1,3 +1,0 @@
-This folder contains an R markdown (Rmd) file detailing a data analytics case study I completed as part of the Google Data Analytics Professional Certificate program. This analysis was conducted on a high volume (approximately 20 million uncleansed records) of real-world data from a Chicago-based bike-share startup. In addition to functioning as a capstone for my data analytics certification, this project was also an opportunity for me to learn the basics of R. Past programming experience has been in Python (my preferred language), MATLAB, C++, and Java.
-
-This project represents a thorough and complete statistical analysis of ride share data to determine the difference in usage patterns between single-use customers and subscribers.

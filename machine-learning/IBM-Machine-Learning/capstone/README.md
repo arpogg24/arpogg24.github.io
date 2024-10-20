@@ -1,0 +1,1 @@
+This project has moved [here](https://github.com/arpogg24/deep-learning-projects/tree/main/recommendation-systems-labs).
